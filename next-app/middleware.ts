@@ -1,28 +1,22 @@
-import { NextResponse } from "next/server"
-import type { NextRequest } from "next/server"
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server"
 
-const publicRoutes = ["/", "/login", "/register"]
+const isPublicRoute = createRouteMatcher([
+  "/",
+  "/login(.*)",
+  "/register(.*)",
+  "/sso-callback(.*)",
+  "/api/webhooks(.*)",
+])
 
-export function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl
-
-  // Allow public routes
-  if (publicRoutes.some((r) => pathname.startsWith(r))) {
-    return NextResponse.next()
+export default clerkMiddleware(async (auth, req) => {
+  if (!isPublicRoute(req)) {
+    await auth.protect()
   }
-
-  // Check token in cookie
-  const token = req.cookies.get("token")?.value
-
-  if (!token) {
-    return NextResponse.redirect(new URL("/login", req.url))
-  }
-
-  return NextResponse.next()
-}
+})
 
 export const config = {
   matcher: [
     "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    "/(api|trpc)(.*)",
   ],
 }

@@ -1,12 +1,11 @@
 import Link from "next/link"
+import { auth } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
-import { cookies } from "next/headers"
 
 export default async function Page() {
-  const cookieStore = await cookies()
-  const token = cookieStore.get("token")?.value
+  const { userId } = await auth()
 
-  if (token) {
+  if (userId) {
     redirect("/home")
   }
 
