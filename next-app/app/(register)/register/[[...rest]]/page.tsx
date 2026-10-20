@@ -97,8 +97,13 @@ export default function RegisterPage() {
         redirectUrl: `${window.location.origin}/sso-callback`,
         actionCompleteRedirectUrl: `${window.location.origin}/home`,
       } as Parameters<typeof signIn.create>[0])
-    } catch {
-      setError("Gagal daftar dengan Google. Aktifkan Google di Clerk Dashboard terlebih dahulu.")
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err)
+      setError(
+        msg.toLowerCase().includes("not enabled") || msg.toLowerCase().includes("not supported")
+          ? "Login Google belum diaktifkan. Aktifkan di Clerk Dashboard → Configure → SSO Connections → Google."
+          : "Gagal daftar dengan Google. Coba lagi."
+      )
       setGoogleLoading(false)
     }
   }
