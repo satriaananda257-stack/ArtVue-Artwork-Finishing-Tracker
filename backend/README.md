@@ -1,6 +1,6 @@
-# DeadLineKu — Backend
+# ArtVue — Backend
 
-REST API untuk aplikasi DeadLineKu. Dibangun dengan Express 5, TypeScript, Drizzle ORM, dan MySQL.
+REST API untuk aplikasi ArtVue. Dibangun dengan Express 5, TypeScript, Drizzle ORM, dan MySQL.
 
 ## Tech Stack
 
@@ -27,7 +27,7 @@ Buat file `.env` di folder `backend/`:
 
 ```env
 # Database
-DATABASE_URL=mysql://user:password@localhost:3306/deadlineku
+DATABASE_URL=mysql://user:password@localhost:3306/ArtVue
 
 # JWT
 JWT_SECRET=your_jwt_secret_key

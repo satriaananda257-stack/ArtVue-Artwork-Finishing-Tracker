@@ -19,7 +19,7 @@ export default async function Page() {
             <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
           </svg>
         </div>
-        <span className="text-lg font-bold tracking-widest text-white">DEADLINEKU</span>
+        <span className="text-lg font-bold tracking-widest text-white">ArtVue</span>
       </div>
 
       <h1 className="mb-4 text-5xl font-black uppercase tracking-tight text-white md:text-6xl">

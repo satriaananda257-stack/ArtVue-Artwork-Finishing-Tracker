@@ -2,9 +2,7 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import Image from "next/image"
 import { useRouter } from "next/navigation"
-import { useUser, useClerk } from "@clerk/nextjs"
 import {
   LayoutGrid,
   List,
@@ -69,10 +67,17 @@ function formatDate(iso: string) {
   })
 }
 
+interface LocalUser {
+  id: number
+  username: string | null
+  email: string
+  role: string
+}
+
 export default function HomePage() {
   const router = useRouter()
-  const { user } = useUser()
-  const { signOut } = useClerk()
+
+  const [localUser, setLocalUser] = useState<LocalUser | null>(null)
 
   const [works, setWorks] = useState<Work[]>([])
   const [loading, setLoading] = useState(true)
@@ -85,6 +90,14 @@ export default function HomePage() {
 
   const token =
     typeof window !== "undefined" ? (localStorage.getItem("token") ?? "") : ""
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const raw = localStorage.getItem("user")
+      if (raw) setLocalUser(JSON.parse(raw))
+      else router.push("/login")
+    }
+  }, [])
 
   useEffect(() => {
     const fetchWorks = async () => {
@@ -120,9 +133,10 @@ export default function HomePage() {
   const doneCount = works.filter((w) => w.status === "Done").length
   const inProgressCount = works.filter((w) => w.status !== "Done").length
 
-  const handleSignOut = async () => {
-    await signOut()
-    router.push("/")
+  const handleSignOut = () => {
+    localStorage.removeItem("token")
+    localStorage.removeItem("user")
+    router.push("/login")
   }
 
   return (
@@ -137,7 +151,7 @@ export default function HomePage() {
             </svg>
           </div>
           <div>
-            <p className="text-sm font-bold tracking-wide text-white">DEADLINEKU</p>
+            <p className="text-sm font-bold tracking-wide text-white">ArtVue</p>
             <p className="text-[10px] text-zinc-500">Creative Dashboard</p>
           </div>
         </div>
@@ -173,25 +187,15 @@ export default function HomePage() {
         {/* User */}
         <div className="border-t border-zinc-800 px-4 py-4">
           <div className="flex items-center gap-3">
-            {user?.imageUrl ? (
-              <Image
-                src={user.imageUrl}
-                alt="avatar"
-                width={32}
-                height={32}
-                className="rounded-full object-cover"
-              />
-            ) : (
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-700 text-xs font-bold text-white">
-                {user?.firstName?.[0] ?? "U"}
-              </div>
-            )}
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-700 text-xs font-bold text-white">
+              {localUser?.username?.[0]?.toUpperCase() ?? "U"}
+            </div>
             <div className="min-w-0 flex-1">
               <p className="truncate text-xs font-semibold text-white">
-                {user?.firstName ?? "User"}
+                {localUser?.username ?? "User"}
               </p>
               <p className="truncate text-[10px] text-zinc-500">
-                {user?.primaryEmailAddress?.emailAddress ?? ""}
+                {localUser?.email ?? ""}
               </p>
             </div>
             <button
@@ -216,7 +220,7 @@ export default function HomePage() {
                 <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
               </svg>
             </div>
-            <span className="text-sm font-bold tracking-wide">DEADLINEKU</span>
+            <span className="text-sm font-bold tracking-wide">ArtVue</span>
           </div>
 
           <div className="hidden md:block">

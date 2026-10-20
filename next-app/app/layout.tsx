@@ -13,7 +13,7 @@ const fontMono = Geist_Mono({
 })
 
 export const metadata = {
-  title: "DeadLineKu",
+  title: "ArtVue",
   description: "Track your artwork progress",
 }
 

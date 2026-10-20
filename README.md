@@ -1,11 +1,11 @@
-# DeadLineKu
+# ArtVue
 
 Platform untuk seniman digital melacak progres karya dari Sketch sampai Done.
 
 ## Struktur Project
 
 ```
-DeadLineKu/
+ArtVue/
 ├── backend/        # REST API — Express + Drizzle ORM + MySQL
 └── next-app/       # Frontend — Next.js 16 + Clerk Auth + Tailwind CSS
 ```
@@ -25,7 +25,7 @@ DeadLineKu/
 ### 1. Clone & masuk ke folder
 
 ```bash
-cd DeadLineKu
+cd ArtVue
 ```
 
 ### 2. Jalankan Backend

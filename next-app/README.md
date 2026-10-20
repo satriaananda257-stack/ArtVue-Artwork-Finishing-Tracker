@@ -1,4 +1,4 @@
-# DeadLineKu — Frontend
+# ArtVue — Frontend
 
 Aplikasi web untuk melacak progres karya seni. Dibangun dengan Next.js 16, Clerk, dan Tailwind CSS v4.
 
