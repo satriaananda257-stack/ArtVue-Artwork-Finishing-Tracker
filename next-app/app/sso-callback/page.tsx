@@ -1,67 +1,89 @@
+
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import { useAuth } from "@clerk/nextjs"
 import { useRouter } from "next/navigation"
-import { useAuth, useSignIn } from "@clerk/nextjs"
+import { HandleSSOCallback } from "@clerk/nextjs"
 import { Loader2 } from "lucide-react"
 
-export default function SSOCallbackPage() {
+function ExchangeToken() {
   const router = useRouter()
-  const { isSignedIn, getToken } = useAuth()
-  const { handleRedirectCallback, isLoaded } = useSignIn()
+  const { isLoaded, isSignedIn, getToken } = useAuth()
+  const [processing, setProcessing] = useState(false)
 
   useEffect(() => {
-    if (!isLoaded) return
-
-    const handleCallback = async () => {
-      try {
-        await handleRedirectCallback()
-      } catch {
-        // Clerk sudah handle redirect, lanjut exchange token
-      }
-    }
-    handleCallback()
-  }, [isLoaded, handleRedirectCallback])
-
-  useEffect(() => {
-    if (!isSignedIn) return
+    if (!isLoaded || !isSignedIn || processing) return
 
     const exchangeToken = async () => {
+      setProcessing(true)
+
       try {
         const clerkToken = await getToken()
+
         if (!clerkToken) {
-          router.push("/login")
+          router.replace("/login")
           return
         }
 
-        const res = await fetch("http://localhost:5000/api/v1/auth/clerk", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ clerkToken }),
-        })
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL
+
+        if (!apiUrl) {
+          throw new Error("NEXT_PUBLIC_API_URL belum dikonfigurasi")
+        }
+
+        const res = await fetch(
+          `${apiUrl}/api/v1/auth/clerk`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ clerkToken }),
+          }
+        )
+
         const data = await res.json()
 
-        if (res.ok) {
-          localStorage.setItem("token", data.data.token)
-          localStorage.setItem("user", JSON.stringify(data.data.user))
-          router.push("/home")
-        } else {
-          router.push("/login")
+        if (!res.ok || !data.data?.token || !data.data?.user) {
+          throw new Error("Pertukaran token gagal")
         }
-      } catch {
-        router.push("/login")
+
+        localStorage.setItem("token", data.data.token)
+        localStorage.setItem("user", JSON.stringify(data.data.user))
+
+        router.replace("/home")
+      } catch (error) {
+        console.error("Clerk token exchange gagal:", error)
+        router.replace("/login")
       }
     }
 
-    exchangeToken()
-  }, [isSignedIn, getToken, router])
+    void exchangeToken()
+  }, [isLoaded, isSignedIn, getToken, router, processing])
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#141414]">
       <div className="flex flex-col items-center gap-3">
         <Loader2 className="h-8 w-8 animate-spin text-zinc-400" />
-        <p className="text-sm text-zinc-500">Menghubungkan akun Google...</p>
+        <p className="text-sm text-zinc-500">
+          Menghubungkan akun Google...
+        </p>
       </div>
     </div>
+  )
+}
+
+export default function SSOCallbackPage() {
+  return (
+    <HandleSSOCallback
+      navigateToApp={() => <ExchangeToken />}
+      navigateToSignIn={() => {
+        window.location.href = "/login"
+      }}
+      navigateToSignUp={() => {
+        window.location.href = "/login"
+      }}
+    />
   )
 }
