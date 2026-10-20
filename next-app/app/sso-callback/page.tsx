@@ -71,10 +71,5 @@ function ExchangeToken() {
 }
 
 export default function SSOCallbackPage() {
-  return (
-    <AuthenticateWithRedirectCallback
-      afterSignInUrl="/sso-exchange"
-      afterSignUpUrl="/sso-exchange"
-    />
-  )
+  return <AuthenticateWithRedirectCallback />
 }
