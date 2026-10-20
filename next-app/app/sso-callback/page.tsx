@@ -2,9 +2,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useAuth } from "@clerk/nextjs"
+import { useAuth, AuthenticateWithRedirectCallback } from "@clerk/nextjs"
 import { useRouter } from "next/navigation"
-import { HandleSSOCallback } from "@clerk/nextjs"
 import { Loader2 } from "lucide-react"
 
 function ExchangeToken() {
@@ -29,19 +28,18 @@ function ExchangeToken() {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL
 
         if (!apiUrl) {
-          throw new Error("NEXT_PUBLIC_API_URL belum dikonfigurasi")
+          // Kalau API URL belum di-set, langsung redirect ke home
+          router.replace("/home")
+          return
         }
 
-        const res = await fetch(
-          `${apiUrl}/api/v1/auth/clerk`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ clerkToken }),
-          }
-        )
+        const res = await fetch(`${apiUrl}/api/v1/auth/clerk`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ clerkToken }),
+        })
 
         const data = await res.json()
 
@@ -66,9 +64,7 @@ function ExchangeToken() {
     <div className="flex min-h-screen items-center justify-center bg-[#141414]">
       <div className="flex flex-col items-center gap-3">
         <Loader2 className="h-8 w-8 animate-spin text-zinc-400" />
-        <p className="text-sm text-zinc-500">
-          Menghubungkan akun Google...
-        </p>
+        <p className="text-sm text-zinc-500">Menghubungkan akun Google...</p>
       </div>
     </div>
   )
@@ -76,14 +72,9 @@ function ExchangeToken() {
 
 export default function SSOCallbackPage() {
   return (
-    <HandleSSOCallback
-      navigateToApp={() => <ExchangeToken />}
-      navigateToSignIn={() => {
-        window.location.href = "/login"
-      }}
-      navigateToSignUp={() => {
-        window.location.href = "/login"
-      }}
+    <AuthenticateWithRedirectCallback
+      afterSignInUrl="/sso-exchange"
+      afterSignUpUrl="/sso-exchange"
     />
   )
 }
