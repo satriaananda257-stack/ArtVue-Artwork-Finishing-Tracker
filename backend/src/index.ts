@@ -8,7 +8,17 @@ import worksRoute from "./routes/works/works.route";
 import usersRouter from "./routes/users/user.route";
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
+
+// Allowed origins: semua localhost + URL production dari env
+const allowedOrigins = [
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "http://127.0.0.1:3000",
+    ...(process.env.ALLOWED_ORIGINS
+        ? process.env.ALLOWED_ORIGINS.split(",").map((o) => o.trim())
+        : []),
+];
 
 app.use(cors({
     origin: (origin, callback) => {
@@ -18,7 +28,8 @@ app.use(cors({
             origin.startsWith("http://127.0.0.1") ||
             origin.startsWith("http://192.168.") ||
             origin.startsWith("http://10.") ||
-            origin.startsWith("http://172.")
+            origin.startsWith("http://172.") ||
+            allowedOrigins.includes(origin)
         ) {
             return callback(null, true);
         }
@@ -40,7 +51,6 @@ app.get("/", (_req, res) => {
     res.send("Hello World");
 });
 
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(Number(PORT), '0.0.0.0', () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
-    console.log(`⚡️[server]: Also accessible at http://192.168.18.6:${PORT}`);
 });
