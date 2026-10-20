@@ -62,7 +62,7 @@ export default function CreateWorkPage() {
       formData.append("status", status)
       if (imageFile) formData.append("image", imageFile)
 
-      const res = await fetch("http://localhost:5000/api/v1/works", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000"}/api/v1/works`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token") ?? ""}`,
