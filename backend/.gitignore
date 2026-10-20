@@ -1,0 +1,20 @@
+# dependencies
+node_modules/
+
+# env files
+.env
+.env.*
+!.env.example
+
+# build output
+dist/
+
+# debug
+npm-debug.log*
+
+# typescript
+*.tsbuildinfo
+
+# misc
+.DS_Store
+*.pem
