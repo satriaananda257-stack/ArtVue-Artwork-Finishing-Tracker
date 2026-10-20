@@ -1,18 +1,17 @@
 import Link from "next/link"
-import { auth } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
+import { cookies } from "next/headers"
 
 export default async function Page() {
-  const { userId } = await auth()
+  const cookieStore = await cookies()
+  const token = cookieStore.get("token")?.value
 
-  // Kalau sudah login, langsung ke home
-  if (userId) {
+  if (token) {
     redirect("/home")
   }
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-[#141414] px-6 text-center">
-      {/* Logo */}
       <div className="mb-8 flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-md bg-white">
           <svg viewBox="0 0 24 24" className="h-5 w-5 fill-black">
