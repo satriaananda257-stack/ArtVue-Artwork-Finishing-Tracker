@@ -93,7 +93,7 @@ export default function PostDetailPage() {
       setLoading(true)
       setError(null)
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000"}/api/v1/works/${id}`, {
+        const res = await fetch(`/api/v1/works/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         const data = await res.json()
@@ -150,7 +150,7 @@ export default function PostDetailPage() {
       formData.append("status", editStatus)
       if (editImageFile) formData.append("image", editImageFile)
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000"}/api/v1/works/${id}`, {
+      const res = await fetch(`/api/v1/works/${id}`, {
         method: "PATCH",
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
@@ -172,7 +172,7 @@ export default function PostDetailPage() {
   const handleDelete = async () => {
     setDeleting(true)
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000"}/api/v1/works/${id}`, {
+      const res = await fetch(`/api/v1/works/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       })
