@@ -1,14 +1,6 @@
 import Link from "next/link"
-import { auth } from "@clerk/nextjs/server"
-import { redirect } from "next/navigation"
 
-export default async function Page() {
-  const { userId } = await auth()
-
-  if (userId) {
-    redirect("/home")
-  }
-
+export default function Page() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-[#141414] px-6 text-center">
       <div className="mb-8 flex items-center gap-3">
