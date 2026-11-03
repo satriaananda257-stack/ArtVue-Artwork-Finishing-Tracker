@@ -61,7 +61,7 @@ const STATUS_DOT: Record<WorkStatus, string> = {
 }
 
 function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("id-ID", {
+  return new Date(iso).toLocaleDateString("en-US", {
     day: "numeric",
     month: "short",
     year: "numeric",
@@ -109,9 +109,9 @@ export default function HomePage() {
         })
         const data = await res.json()
         if (res.ok) setWorks(data.data.works)
-        else setError(data.message ?? "Gagal memuat karya.")
+        else setError(data.message ?? "Failed to load artwork.")
       } catch {
-        setError("Gagal memuat data.")
+        setError("Failed to load data.")
       } finally {
         setLoading(false)
       }
@@ -166,13 +166,13 @@ export default function HomePage() {
 
         {/* Stats */}
         <div className="mx-3 mb-4 rounded-xl border border-zinc-800 bg-zinc-900/60 p-3 space-y-2">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-500">Progres</p>
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-500">Progress</p>
           <div className="flex justify-between text-xs text-zinc-400">
-            <span>Total Karya</span>
+            <span>Total Artworks</span>
             <span className="font-semibold text-white">{works.length}</span>
           </div>
           <div className="flex justify-between text-xs text-zinc-400">
-            <span>Selesai</span>
+            <span>Completed</span>
             <span className="font-semibold text-green-400">{doneCount}</span>
           </div>
           {works.length > 0 && (
@@ -226,7 +226,7 @@ export default function HomePage() {
 
           <div className="hidden md:block">
             <h1 className="text-xl font-black tracking-tight">My Artwork</h1>
-            <p className="text-xs text-zinc-500">Kelola dan pantau progres karya kamu</p>
+            <p className="text-xs text-zinc-500">Manage and track your artwork progress</p>
           </div>
 
           <Link
@@ -234,7 +234,7 @@ export default function HomePage() {
             className="flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-zinc-200"
           >
             <Plus className="h-4 w-4" />
-            Tambah Karya
+            Add Artwork
           </Link>
         </header>
 
@@ -248,7 +248,7 @@ export default function HomePage() {
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Cari karya..."
+                placeholder="Search artwork..."
                 className="w-full rounded-lg border border-zinc-800 bg-zinc-900 py-2 pl-9 pr-4 text-sm text-white placeholder-zinc-600 outline-none transition focus:border-zinc-600"
               />
             </div>
@@ -260,7 +260,7 @@ export default function HomePage() {
                 className="flex items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-zinc-400 transition hover:border-zinc-700 hover:text-white"
               >
                 {filterStatus === "All" ? (
-                  "Semua Status"
+                  "All Status"
                 ) : (
                   <>
                     <span className={`h-2 w-2 rounded-full ${STATUS_DOT[filterStatus]}`} />
@@ -275,7 +275,7 @@ export default function HomePage() {
                     onClick={() => { setFilterStatus("All"); setShowFilterMenu(false) }}
                     className="flex w-full items-center gap-2 px-3 py-2 text-sm text-zinc-300 hover:bg-zinc-800"
                   >
-                    Semua Status
+                    All Status
                   </button>
                   {WORK_STATUS.map((s) => (
                     <button
@@ -297,7 +297,7 @@ export default function HomePage() {
               className="flex items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-zinc-400 transition hover:border-zinc-700 hover:text-white"
             >
               <CalendarDays className="h-3.5 w-3.5" />
-              {sortNewest ? "Terbaru" : "Terlama"}
+              {sortNewest ? "Newest" : "Oldest"}
             </button>
 
             {/* View toggle */}
@@ -331,7 +331,7 @@ export default function HomePage() {
           ) : error ? (
             <div className="flex min-h-[300px] flex-col items-center justify-center gap-3 text-center">
               <p className="text-zinc-400">{error}</p>
-              <p className="text-xs text-zinc-600">Pastikan sudah login dengan benar.</p>
+              <p className="text-xs text-zinc-600">Make sure you are logged in correctly.</p>
             </div>
           ) : filtered.length === 0 ? (
             <div className="flex min-h-[300px] flex-col items-center justify-center gap-4 text-center">
@@ -340,12 +340,12 @@ export default function HomePage() {
               </div>
               <div>
                 <p className="font-semibold text-white">
-                  {works.length === 0 ? "Belum ada karya" : "Tidak ada hasil"}
+                  {works.length === 0 ? "No artworks yet" : "No results"}
                 </p>
                 <p className="mt-1 text-sm text-zinc-500">
                   {works.length === 0
-                    ? "Mulai dengan menambahkan karya pertamamu."
-                    : "Coba ubah filter atau kata pencarian."}
+                    ? "Start by adding your first artwork."
+                    : "Try changing the filter or search keywords."}
                 </p>
               </div>
               {works.length === 0 && (
@@ -354,7 +354,7 @@ export default function HomePage() {
                   className="flex items-center gap-2 rounded-lg bg-white px-5 py-2.5 text-sm font-semibold text-black transition hover:bg-zinc-200"
                 >
                   <Plus className="h-4 w-4" />
-                  Tambah Karya
+                  Add Artwork
                 </Link>
               )}
             </div>

@@ -54,7 +54,7 @@ const STATUS_COLOR: Record<WorkStatus, string> = {
 }
 
 function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("id-ID", {
+  return new Date(iso).toLocaleDateString("en-US", {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -98,12 +98,12 @@ export default function PostDetailPage() {
         })
         const data = await res.json()
         if (!res.ok) {
-          setError(data.message ?? "Karya tidak ditemukan.")
+          setError(data.message ?? "Artwork not found.")
           return
         }
         setWork(data.data.work)
       } catch {
-        setError("Gagal memuat data. Coba lagi.")
+        setError("Failed to load data. Try again.")
       } finally {
         setLoading(false)
       }
@@ -137,7 +137,7 @@ export default function PostDetailPage() {
 
   const handleSave = async () => {
     if (!editTitle.trim()) {
-      setSaveError("Judul wajib diisi.")
+      setSaveError("Title is required.")
       return
     }
     setSaving(true)
@@ -157,13 +157,13 @@ export default function PostDetailPage() {
       })
       const data = await res.json()
       if (!res.ok) {
-        setSaveError(data.message ?? "Gagal menyimpan perubahan.")
+        setSaveError(data.message ?? "Failed to save changes.")
         return
       }
       setWork(data.data.work)
       setEditing(false)
     } catch {
-      setSaveError("Terjadi kesalahan. Coba lagi.")
+      setSaveError("An error occurred. Try again.")
     } finally {
       setSaving(false)
     }
@@ -180,10 +180,10 @@ export default function PostDetailPage() {
         router.push("/home")
       } else {
         const data = await res.json()
-        alert(data.message ?? "Gagal menghapus karya.")
+        alert(data.message ?? "Failed to delete artwork.")
       }
     } catch {
-      alert("Terjadi kesalahan saat menghapus.")
+      alert("An error occurred while deleting.")
     } finally {
       setDeleting(false)
       setShowDeleteConfirm(false)
@@ -202,9 +202,9 @@ export default function PostDetailPage() {
   if (error || !work) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-[#141414] text-white">
-        <p className="text-zinc-400">{error ?? "Karya tidak ditemukan."}</p>
+        <p className="text-zinc-400">{error ?? "Artwork not found."}</p>
         <Link href="/dashboard" className="text-sm text-white underline">
-          Kembali ke Dashboard
+          Back to Dashboard
         </Link>
       </div>
     )
@@ -222,23 +222,23 @@ export default function PostDetailPage() {
             className="flex items-center gap-2 text-sm text-zinc-400 transition hover:text-white"
           >
             <ChevronLeft className="h-4 w-4" />
-            Kembali
+            Back
           </Link>
-          <h1 className="text-sm font-semibold tracking-wide">Detail Karya</h1>
+          <h1 className="text-sm font-semibold tracking-wide">Artwork Detail</h1>
           {/* Actions */}
           {!editing ? (
             <div className="flex items-center gap-2">
               <button
                 onClick={startEdit}
                 className="flex h-8 w-8 items-center justify-center rounded-md text-zinc-400 transition hover:bg-zinc-800 hover:text-white"
-                aria-label="Edit karya"
+                aria-label="Edit artwork"
               >
                 <Pencil className="h-4 w-4" />
               </button>
               <button
                 onClick={() => setShowDeleteConfirm(true)}
                 className="flex h-8 w-8 items-center justify-center rounded-md text-zinc-400 transition hover:bg-red-900/30 hover:text-red-400"
-                aria-label="Hapus karya"
+                aria-label="Delete artwork"
               >
                 <Trash2 className="h-4 w-4" />
               </button>
@@ -248,7 +248,7 @@ export default function PostDetailPage() {
               <button
                 onClick={cancelEdit}
                 className="flex h-8 w-8 items-center justify-center rounded-md text-zinc-400 transition hover:bg-zinc-800 hover:text-white"
-                aria-label="Batal edit"
+                aria-label="Cancel edit"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -262,7 +262,7 @@ export default function PostDetailPage() {
                 ) : (
                   <Save className="h-3.5 w-3.5" />
                 )}
-                Simpan
+                Save
               </button>
             </div>
           )}
@@ -283,7 +283,7 @@ export default function PostDetailPage() {
           ) : (
             <div className="flex h-full flex-col items-center justify-center gap-2 text-zinc-600">
               <ImageOff className="h-10 w-10" />
-              <span className="text-sm">Tidak ada gambar</span>
+              <span className="text-sm">No image</span>
             </div>
           )}
           {/* Replace image button when editing */}
@@ -294,7 +294,7 @@ export default function PostDetailPage() {
               className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-lg bg-black/70 px-3 py-2 text-xs text-white backdrop-blur-sm transition hover:bg-black/90"
             >
               <ImagePlus className="h-3.5 w-3.5" />
-              Ganti Gambar
+              Replace Image
             </button>
           )}
           <input
@@ -356,16 +356,16 @@ export default function PostDetailPage() {
         <div className="flex flex-wrap gap-4 text-xs text-zinc-500">
           <span className="flex items-center gap-1.5">
             <CalendarDays className="h-3.5 w-3.5" />
-            Dibuat {formatDate(work.createdAt)}
+            Created {formatDate(work.createdAt)}
           </span>
           {work.completedAt && (
             <span className="flex items-center gap-1.5 text-green-400">
               <CheckCircle2 className="h-3.5 w-3.5" />
-              Selesai {formatDate(work.completedAt)}
+              Completed {formatDate(work.completedAt)}
             </span>
           )}
           {work.username && (
-            <span className="text-zinc-500">oleh {work.username}</span>
+            <span className="text-zinc-500">by {work.username}</span>
           )}
         </div>
 
@@ -375,13 +375,13 @@ export default function PostDetailPage() {
         {/* Description */}
         <div>
           <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-zinc-500">
-            Deskripsi
+            Description
           </h3>
           {editing ? (
             <textarea
               value={editDescription}
               onChange={(e) => setEditDescription(e.target.value)}
-              placeholder="Ceritakan tentang karya ini..."
+              placeholder="Describe this artwork..."
               rows={3}
               className="w-full resize-none rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none transition focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400"
             />
@@ -390,20 +390,20 @@ export default function PostDetailPage() {
               {work.description}
             </p>
           ) : (
-            <p className="text-sm italic text-zinc-600">Tidak ada deskripsi.</p>
+            <p className="text-sm italic text-zinc-600">No description.</p>
           )}
         </div>
 
         {/* Notes */}
         <div>
           <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-zinc-500">
-            Catatan
+            Notes
           </h3>
           {editing ? (
             <textarea
               value={editNotes}
               onChange={(e) => setEditNotes(e.target.value)}
-              placeholder="Catatan pribadi, deadline, referensi, dll..."
+              placeholder="Personal notes, deadlines, references, etc..."
               rows={3}
               className="w-full resize-none rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none transition focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400"
             />
@@ -412,7 +412,7 @@ export default function PostDetailPage() {
               {work.notes}
             </p>
           ) : (
-            <p className="text-sm italic text-zinc-600">Tidak ada catatan.</p>
+            <p className="text-sm italic text-zinc-600">No notes.</p>
           )}
         </div>
       </main>
@@ -427,10 +427,10 @@ export default function PostDetailPage() {
             className="w-full max-w-sm rounded-2xl border border-zinc-800 bg-[#1c1c1c] p-6"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="mb-2 text-base font-bold text-white">Hapus Karya?</h2>
+            <h2 className="mb-2 text-base font-bold text-white">Delete Artwork?</h2>
             <p className="mb-6 text-sm text-zinc-400">
-              Karya <span className="font-semibold text-white">{work.title}</span> akan
-              dihapus permanen dan tidak bisa dikembalikan.
+              Artwork <span className="font-semibold text-white">{work.title}</span> will be
+              permanently deleted and cannot be undone.
             </p>
             <div className="flex gap-3">
               <button
@@ -438,7 +438,7 @@ export default function PostDetailPage() {
                 disabled={deleting}
                 className="flex-1 rounded-lg border border-zinc-700 py-2.5 text-sm text-zinc-300 transition hover:bg-zinc-800 disabled:opacity-50"
               >
-                Batal
+                Cancel
               </button>
               <button
                 onClick={handleDelete}
@@ -446,7 +446,7 @@ export default function PostDetailPage() {
                 className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-red-600 py-2.5 text-sm font-semibold text-white transition hover:bg-red-500 disabled:opacity-50"
               >
                 {deleting && <Loader2 className="h-4 w-4 animate-spin" />}
-                {deleting ? "Menghapus..." : "Ya, Hapus"}
+                {deleting ? "Deleting..." : "Yes, Delete"}
               </button>
             </div>
           </div>

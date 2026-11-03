@@ -18,11 +18,11 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!username || !email || !password) {
-      setError("Semua field wajib diisi.")
+      setError("All fields are required.")
       return
     }
     if (password.length < 6) {
-      setError("Password minimal 6 karakter.")
+      setError("Password must be at least 6 characters.")
       return
     }
     setLoading(true)
@@ -36,10 +36,10 @@ export default function RegisterPage() {
       })
       const data = await res.json()
       if (!res.ok) {
-        setError(data.message ?? "Gagal membuat akun.")
+        setError(data.message ?? "Failed to create account.")
         return
       }
-      // Auto login setelah register
+      // Auto login after register
       const loginRes = await fetch(`${apiUrl}/api/v1/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -52,7 +52,7 @@ export default function RegisterPage() {
       }
       router.push("/home")
     } catch {
-      setError("Gagal terhubung ke server. Coba lagi.")
+      setError("Failed to connect to server. Try again.")
     } finally {
       setLoading(false)
     }
@@ -70,10 +70,10 @@ export default function RegisterPage() {
           <span className="text-sm font-semibold tracking-wide text-white">ArtVue</span>
         </div>
 
-        <h1 className="mb-1 text-2xl font-bold text-white">Buat Akun</h1>
+        <h1 className="mb-1 text-2xl font-bold text-white">Create Account</h1>
         <p className="mb-8 text-sm text-zinc-400">
-          Sudah punya akun?{" "}
-          <Link href="/login" className="text-white underline">Masuk</Link>
+          Already have an account?{" "}
+          <Link href="/login" className="text-white underline">Sign In</Link>
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -83,7 +83,7 @@ export default function RegisterPage() {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="username kamu"
+              placeholder="your username"
               className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none transition focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400"
             />
           </div>
@@ -93,7 +93,7 @@ export default function RegisterPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="kamu@email.com"
+              placeholder="you@email.com"
               className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none transition focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400"
             />
           </div>
@@ -104,7 +104,7 @@ export default function RegisterPage() {
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="min. 6 karakter"
+                placeholder="min. 6 characters"
                 className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-3 pr-11 text-sm text-white placeholder-zinc-600 outline-none transition focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400"
               />
               <button
@@ -127,7 +127,7 @@ export default function RegisterPage() {
             className="flex w-full items-center justify-center gap-2 rounded-lg bg-white py-3 text-sm font-semibold text-black transition hover:bg-zinc-200 disabled:opacity-50"
           >
             {loading && <Loader2 className="h-4 w-4 animate-spin" />}
-            {loading ? "Mendaftar..." : "Daftar Sekarang"}
+            {loading ? "Registering..." : "Sign Up Now"}
           </button>
         </form>
       </div>

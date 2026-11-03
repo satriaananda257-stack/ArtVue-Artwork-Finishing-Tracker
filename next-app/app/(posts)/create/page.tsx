@@ -47,7 +47,7 @@ export default function CreateWorkPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!title.trim()) {
-      setError("Title wajib diisi.")
+      setError("Title is required.")
       return
     }
 
@@ -73,13 +73,13 @@ export default function CreateWorkPage() {
       const data = await res.json()
 
       if (!res.ok) {
-        setError(data.message ?? "Gagal membuat karya.")
+        setError(data.message ?? "Failed to create artwork.")
         return
       }
 
       router.push(`/posts/${data.data.work.id}`)
     } catch {
-      setError("Terjadi kesalahan. Coba lagi.")
+      setError("An error occurred. Try again.")
     } finally {
       setLoading(false)
     }
@@ -95,9 +95,9 @@ export default function CreateWorkPage() {
             className="flex items-center gap-2 text-sm text-zinc-400 transition hover:text-white"
           >
             <ChevronLeft className="h-4 w-4" />
-            Kembali
+            Back
           </Link>
-          <h1 className="text-sm font-semibold tracking-wide">Tambah Karya</h1>
+          <h1 className="text-sm font-semibold tracking-wide">Add Artwork</h1>
           <div className="w-16" />
         </div>
       </header>
@@ -107,7 +107,7 @@ export default function CreateWorkPage() {
           {/* Image Upload */}
           <div>
             <label className="mb-2 block text-sm font-medium text-zinc-400">
-              Gambar Karya
+              Artwork Image
             </label>
             {imagePreview ? (
               <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-zinc-700">
@@ -132,8 +132,8 @@ export default function CreateWorkPage() {
                 className="flex aspect-video w-full flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-zinc-700 bg-zinc-900 transition hover:border-zinc-500 hover:bg-zinc-800"
               >
                 <ImagePlus className="h-8 w-8 text-zinc-500" />
-                <span className="text-sm text-zinc-500">Klik untuk upload gambar</span>
-                <span className="text-xs text-zinc-600">PNG, JPG, WEBP • Maks 5MB</span>
+                <span className="text-sm text-zinc-500">Click to upload image</span>
+                <span className="text-xs text-zinc-600">PNG, JPG, WEBP • Max 5MB</span>
               </button>
             )}
             <input
@@ -148,14 +148,14 @@ export default function CreateWorkPage() {
           {/* Title */}
           <div>
             <label htmlFor="title" className="mb-2 block text-sm font-medium text-zinc-400">
-              Judul <span className="text-red-400">*</span>
+              Title <span className="text-red-400">*</span>
             </label>
             <input
               id="title"
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Nama karya kamu..."
+              placeholder="Your artwork name..."
               className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none transition focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400"
             />
           </div>
@@ -163,7 +163,7 @@ export default function CreateWorkPage() {
           {/* Status */}
           <div>
             <label className="mb-2 block text-sm font-medium text-zinc-400">
-              Status Progres
+              Progress Status
             </label>
             <div className="flex flex-wrap gap-2">
               {WORK_STATUS.map((s) => (
@@ -186,14 +186,14 @@ export default function CreateWorkPage() {
           {/* Description */}
           <div>
             <label htmlFor="description" className="mb-2 block text-sm font-medium text-zinc-400">
-              Deskripsi{" "}
-              <span className="text-zinc-600">(opsional)</span>
+              Description{" "}
+              <span className="text-zinc-600">(optional)</span>
             </label>
             <textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Ceritakan tentang karya ini..."
+              placeholder="Describe this artwork..."
               rows={3}
               className="w-full resize-none rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none transition focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400"
             />
@@ -202,14 +202,14 @@ export default function CreateWorkPage() {
           {/* Notes */}
           <div>
             <label htmlFor="notes" className="mb-2 block text-sm font-medium text-zinc-400">
-              Catatan{" "}
-              <span className="text-zinc-600">(opsional)</span>
+              Notes{" "}
+              <span className="text-zinc-600">(optional)</span>
             </label>
             <textarea
               id="notes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Catatan pribadi, deadline, referensi, dll..."
+              placeholder="Personal notes, deadlines, references, etc..."
               rows={3}
               className="w-full resize-none rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none transition focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400"
             />
@@ -229,7 +229,7 @@ export default function CreateWorkPage() {
             className="flex w-full items-center justify-center gap-2 rounded-lg bg-white py-3 text-sm font-semibold text-black transition hover:bg-zinc-200 disabled:opacity-50"
           >
             {loading && <Loader2 className="h-4 w-4 animate-spin" />}
-            {loading ? "Menyimpan..." : "Simpan Karya"}
+            {loading ? "Saving..." : "Save Artwork"}
           </button>
         </form>
       </main>

@@ -17,7 +17,7 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!email || !password) {
-      setError("Email dan password wajib diisi.")
+      setError("Email and password are required.")
       return
     }
     setLoading(true)
@@ -31,14 +31,14 @@ export default function LoginPage() {
       })
       const data = await res.json()
       if (!res.ok) {
-        setError(data.message ?? "Email atau password salah.")
+        setError(data.message ?? "Invalid email or password.")
         return
       }
       localStorage.setItem("token", data.data.token)
       localStorage.setItem("user", JSON.stringify(data.data.user))
       router.push("/home")
     } catch {
-      setError("Gagal terhubung ke server. Coba lagi.")
+      setError("Failed to connect to server. Try again.")
     } finally {
       setLoading(false)
     }
@@ -56,10 +56,10 @@ export default function LoginPage() {
           <span className="text-sm font-semibold tracking-wide text-white">ArtVue</span>
         </div>
 
-        <h1 className="mb-1 text-2xl font-bold text-white">Masuk</h1>
+        <h1 className="mb-1 text-2xl font-bold text-white">Sign In</h1>
         <p className="mb-8 text-sm text-zinc-400">
-          Belum punya akun?{" "}
-          <Link href="/register" className="text-white underline">Daftar</Link>
+          Don't have an account?{" "}
+          <Link href="/register" className="text-white underline">Sign Up</Link>
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -69,7 +69,7 @@ export default function LoginPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="kamu@email.com"
+              placeholder="you@email.com"
               className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none transition focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400"
             />
           </div>
@@ -103,7 +103,7 @@ export default function LoginPage() {
             className="flex w-full items-center justify-center gap-2 rounded-lg bg-white py-3 text-sm font-semibold text-black transition hover:bg-zinc-200 disabled:opacity-50"
           >
             {loading && <Loader2 className="h-4 w-4 animate-spin" />}
-            {loading ? "Masuk..." : "Masuk"}
+            {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
       </div>
