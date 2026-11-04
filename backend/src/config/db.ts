@@ -14,7 +14,8 @@ const pool = mysql.createPool({
         ? { rejectUnauthorized: false }
         : undefined,
     waitForConnections: true,
-    connectionLimit: 10,
+    connectionLimit: 5,  // Aiven free tier caps at 5 simultaneous connections
+    queueLimit: 0,       // queue requests indefinitely instead of throwing
 });
 
 export const db = drizzle(pool, { schema, mode: "default" });
